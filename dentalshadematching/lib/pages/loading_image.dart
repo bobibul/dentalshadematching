@@ -110,21 +110,21 @@ class _AnalyseImageState extends State<AnalyseImage> {
       body: Center(
         child: Column(
           children: [
-            SizedBox(height: 100,),
+            const SizedBox(height: 100,),
             Image.file(File(widget.xfile1.path)),
-            Text("샘플",style: TextStyle(color: Colors.black,
+            const Text("샘플",style: TextStyle(color: Colors.black,
                 fontFamily: '진혁폰트',
                 letterSpacing: 2.0,
                 fontSize: 25.0,
                 fontWeight: FontWeight.bold),),
-            SizedBox(height: 30,),
+            const SizedBox(height: 30,),
             Image.file(File(widget.xfile2.path)),
-            Text("치아",style: TextStyle(color: Colors.black,
+            const Text("치아",style: TextStyle(color: Colors.black,
                 fontFamily: '진혁폰트',
                 letterSpacing: 2.0,
                 fontSize: 25.0,
                 fontWeight: FontWeight.bold),),
-            SizedBox(height: 30,),
+            const SizedBox(height: 30,),
             FloatingActionButton(onPressed: ()async {
 
               Map<String,double> psnrMap = {};
@@ -137,6 +137,7 @@ class _AnalyseImageState extends State<AnalyseImage> {
               img.Image? teethimage = img.decodeImage(bytes2);
 
               List<String> guidelineImage = await getAssetImagesInSample5m3Folder('assets/sample5m3/');
+              print(guidelineImage);
 
               double psnrValue;
 
@@ -216,7 +217,7 @@ class _AnalyseImageState extends State<AnalyseImage> {
               if(!mounted) return;
               Navigator.push(context, MaterialPageRoute(builder: (context) => ShowDesult(string: answer, keyname: keyName!, xfile2: widget.xfile2,)));
 
-            },child: Icon(Icons.check),)
+            },backgroundColor: Colors.purple[800],child: const Icon(Icons.check,color: Colors.white),)
           ],
         ),
       ),

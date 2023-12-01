@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'preview_screen.dart';
 import 'package:image/image.dart' as img;
@@ -47,7 +48,7 @@ class _CameraAppState extends State<CameraApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.amber[100],
+        backgroundColor: Colors.purple[800],
         leadingWidth: 0.0,
         title: SizedBox(height: 30,),
       ),
@@ -56,61 +57,54 @@ class _CameraAppState extends State<CameraApp> {
           builder: (context, snapshot){
             if (snapshot.connectionState == ConnectionState.done) {
               return Stack(
-                alignment: Alignment.center,
+                alignment: Alignment.topCenter,
                 children: [
                   CameraPreview(controller),
-                  Image.asset('assets/overlay_cc2.png'),
+                  Image.asset('assets/overlay_33.png'),
                   Column(
                     children: [
                       SizedBox(height: 600,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // FloatingActionButton(
-                          //   onPressed: _toggleCamera,
-                          //   backgroundColor: Colors.white,
-                          //   child: Icon(
-                          //     Icons.cameraswitch,
-                          //     size: 40,
-                          //     color: Colors.black,
-                          //   ),
-                          // ),
-                          FloatingActionButton(
-                            onPressed: () async{
-                              showDialog(context: context, builder: (context){
-                                return const Column(
-                                  children: [
-                                    SizedBox(height: 400,),
-                                    Center(child: CircularProgressIndicator()),
-                                    SizedBox(height: 100,),
-                                    Text(
-                                      '카메라를 고정한 상태로 기다려주세요',
-                                      style: TextStyle(
-                                          fontFamily: '진혁폰트',
-                                          fontSize: 20.0,
-                                          letterSpacing: 1.0,
-                                          fontWeight: FontWeight.normal,
-                                          color: Colors.red
-                                      ),
-                                    )
-                                  ],
+                      Expanded(
+                        child: Container(
+                          color: Colors.black,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                  child: Container(decoration: BoxDecoration(shape: BoxShape.circle,color: Colors.white),height: 100,width: 100,),onTap:
+                                  () async{
+                                showDialog(context: context, builder: (context){
+                                  return const Column(
+                                    children: [
+                                      SizedBox(height: 400,),
+                                      Center(child: CircularProgressIndicator()),
+                                      SizedBox(height: 100,),
+                                      Text(
+                                        '카메라를 고정한 상태로 기다려주세요',
+                                        style: TextStyle(
+                                            fontFamily: '진혁폰트',
+                                            fontSize: 20.0,
+                                            letterSpacing: 1.0,
+                                            fontWeight: FontWeight.normal,
+                                            color: Colors.red
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                }
                                 );
-                              }
-                              );
-                              XFile xfile = await getCroppedImage();
-                              Navigator.of(context).pop();
-                              if(!mounted) return;
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => ImagePreview(xFile: xfile,)));
-                            },
-                            backgroundColor: Colors.white,
-                            child: const Icon(
-                              Icons.camera,
-                              size: 40,
-                              color: Colors.black,
-                            ),
+                                XFile xfile = await getCroppedImage();
+                                XFile xfile2 = await getCroppedImage2();
+                                Navigator.of(context).pop();
+                                if(!mounted) return;
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => ImagePreview(xFile: xfile, xFile2: xfile2,)));
+                              },
+                              ),
+                            ],
                           ),
-                        ],
-                      )
+                        ),
+                      ),
+
 
                     ],
                   ),
@@ -136,8 +130,10 @@ class _CameraAppState extends State<CameraApp> {
       imageFormatGroup: ImageFormatGroup.yuv420,
     );
 
+
     await controller.initialize();
     await controller.setExposureOffset(-0.5);
+    await controller.setFlashMode(FlashMode.off);
   }
 
   Future<XFile> onTakePicture() async{
@@ -150,17 +146,19 @@ class _CameraAppState extends State<CameraApp> {
     return xfile;
   }
 
-  Future<img.Image> getImagesize(XFile xfile) async{
+  Future<img.Image> getImagesize(XFile xfile,int x,int y,int width,int height) async{
     String imagePath = xfile.path;
     img.Image croppedImage;
     Uint8List bytes = await File(imagePath).readAsBytes();
     img.Image? decodedImage = img.decodeImage(bytes);
     if(_currentCameraIndex == 1){
-      croppedImage = img.copyCrop(decodedImage!, x: 20, y: 530, width: decodedImage.width - 40, height: 450);
+      croppedImage = img.copyCrop(decodedImage!, x: x, y: y, width: width, height: height);
     }
     else{
-      croppedImage = img.copyCrop(decodedImage!, x: 20, y: 1000, width: decodedImage.width - 40, height: 1000);
+      croppedImage = img.copyCrop(decodedImage!, x: x, y: y, width: width, height: height);
     }
+    print(decodedImage.width);
+    print(decodedImage.height);
     return croppedImage;
   }
 
@@ -178,7 +176,16 @@ class _CameraAppState extends State<CameraApp> {
   Future<XFile> getCroppedImage() async{
     img.Image croppedImage;
     XFile xfile = await onTakePicture();
-    croppedImage = await getImagesize(xfile);
+    croppedImage = await getImagesize(xfile,20,1000,2120,450);
+    XFile rexfile = await saveImageToXFile(croppedImage);
+
+    return rexfile;
+  }
+
+  Future<XFile> getCroppedImage2() async{
+    img.Image croppedImage;
+    XFile xfile = await onTakePicture();
+    croppedImage = await getImagesize(xfile,320,1050,250,750);
     XFile rexfile = await saveImageToXFile(croppedImage);
 
     return rexfile;

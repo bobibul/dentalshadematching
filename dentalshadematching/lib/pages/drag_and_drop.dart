@@ -103,14 +103,14 @@ class _CroppingimageState extends State<Croppingimage>{
             Positioned(
                 left: _position1.dx + 3,
                 top: _position1.dy + 50,
-                child: Text(
+                child: const Text(
                   '샘플',
                   style: TextStyle(fontSize: 20),
                 )),
             Positioned(
                 left: _position2.dx + 3,
                 top: _position2.dy + 50,
-                child: Text(
+                child: const Text(
                   '치아',
                   style: TextStyle(fontSize: 20),
                 )),
@@ -133,11 +133,11 @@ class _CroppingimageState extends State<Croppingimage>{
                   }
                       : null,
                   backgroundColor: _position2.dy <= 500 && _position1.dy <= 500
-                      ? Colors.amber[800]
+                      ? Colors.purple[800]
                       : Colors.grey,
                   disabledElevation: 0.0,
                   foregroundColor: Colors.grey,
-                  child: Icon(
+                  child: const Icon(
                     Icons.check,
                     size: 30,
                     color: Colors.white,

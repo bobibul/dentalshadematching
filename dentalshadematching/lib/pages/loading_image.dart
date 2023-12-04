@@ -48,9 +48,15 @@ double calculatePSNR(img.Image? image1, img.Image? image2) {
   mseV /= pixel*pixel;
 
 
+  print('H : $mseH');
+  print('S : $mseS');
+  print('V : $mseV');
+
   double mse = (mseH + mseS + mseV) / 3;
   double maxPixelValue = 255.0; // HSV values are in the range [0, 1]
   double psnr = 20.0 * log(maxPixelValue / sqrt(mse));
+
+
 
 
   return psnr;
@@ -136,31 +142,39 @@ class _AnalyseImageState extends State<AnalyseImage> {
               Uint8List bytes2 = await File(widget.xfile2.path).readAsBytes();
               img.Image? teethimage = img.decodeImage(bytes2);
 
-              List<String> guidelineImage = await getAssetImagesInSample5m3Folder('assets/sample5m3/');
-              print(guidelineImage);
+              List<String> guidelineImage = await getAssetImagesInSample5m3Folder('assets/classic_sample/');
 
               double psnrValue;
+              List<int> correct_angle_list = [];
+              int correct_angle = 0;
 
               for (String name in guidelineImage) {
-                img.Image? image = await decodeAssetImage('assets/sample5m3/$name');
+                int correct_angle = 0;
+                img.Image? image = await decodeAssetImage('assets/classic_sample/$name');
                 psnrMap[name] = calculatePSNR(guideimage, image);
 
                 guideimage = img.copyRotate(guideimage!, angle: 90);
                 psnrValue = calculatePSNR(guideimage, image);
                 if (psnrValue > psnrMap[name]!){
                   psnrMap[name] = psnrValue;
+                  correct_angle = 90;
                 }
                 guideimage = img.copyRotate(guideimage, angle: 180);
                 psnrValue = calculatePSNR(guideimage, image);
                 if (psnrValue > psnrMap[name]!){
                   psnrMap[name] = psnrValue;
+                  correct_angle = 180;
                 }
                 guideimage = img.copyRotate(guideimage, angle: 270);
                 psnrValue = calculatePSNR(guideimage, image);
                 if (psnrValue > psnrMap[name]!){
                   psnrMap[name] = psnrValue;
+                  correct_angle = 270;
                 }
+
+                correct_angle_list.add(correct_angle);
               }
+              print(correct_angle_list);
               // 값을 기준으로 정렬된 Map 생성 (값과 키를 뒤집어 저장)
               SplayTreeMap<double, String> invertedMap = SplayTreeMap<double, String>.fromIterables(psnrMap.values, psnrMap.keys);
 
@@ -171,31 +185,14 @@ class _AnalyseImageState extends State<AnalyseImage> {
               String? keyName = keyWithMaxValue?.substring(0,dotIndex);
 
               List<String> detectImageList = await getAssetImagesInSample5m3Folder('assets/$keyName/');
+              correct_angle = correct_angle_list[int.parse(keyName!.split('_').last)-1];
+              print(correct_angle);
 
 
               for (String name in detectImageList) {
                 img.Image? image = await decodeAssetImage('assets/$keyName/$name');
+                teethimage = img.copyRotate(teethimage!, angle: correct_angle);
                 psnrMap2[name] = calculatePSNR(teethimage, image);
-
-
-                teethimage = img.copyRotate(teethimage!, angle: 90);
-                psnrValue = calculatePSNR(teethimage, image);
-                if (psnrValue > psnrMap2[name]!){
-                  psnrMap2[name] = psnrValue;
-                }
-
-                teethimage = img.copyRotate(teethimage, angle: 180);
-                psnrValue = calculatePSNR(teethimage, image);
-                if (psnrValue > psnrMap2[name]!){
-                  psnrMap2[name] = psnrValue;
-                }
-
-                teethimage = img.copyRotate(teethimage, angle: 270);
-                psnrValue = calculatePSNR(teethimage, image);
-                if (psnrValue > psnrMap2[name]!){
-                  psnrMap2[name] = psnrValue;
-                }
-
 
               }
 

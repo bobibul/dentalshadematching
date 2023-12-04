@@ -94,10 +94,9 @@ class _CameraAppState extends State<CameraApp> {
                                 }
                                 );
                                 XFile xfile = await getCroppedImage();
-                                XFile xfile2 = await getCroppedImage2();
                                 Navigator.of(context).pop();
                                 if(!mounted) return;
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => ImagePreview(xFile: xfile, xFile2: xfile2,)));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => ImagePreview(xFile: xfile)));
                               },
                               ),
                             ],
@@ -132,7 +131,7 @@ class _CameraAppState extends State<CameraApp> {
 
 
     await controller.initialize();
-    await controller.setExposureOffset(-0.5);
+    await controller.setExposureOffset(0.0);
     await controller.setFlashMode(FlashMode.off);
   }
 
@@ -176,20 +175,12 @@ class _CameraAppState extends State<CameraApp> {
   Future<XFile> getCroppedImage() async{
     img.Image croppedImage;
     XFile xfile = await onTakePicture();
-    croppedImage = await getImagesize(xfile,20,1000,2120,450);
+    croppedImage = await getImagesize(xfile,20,1000,2120,1000);
     XFile rexfile = await saveImageToXFile(croppedImage);
 
     return rexfile;
   }
 
-  Future<XFile> getCroppedImage2() async{
-    img.Image croppedImage;
-    XFile xfile = await onTakePicture();
-    croppedImage = await getImagesize(xfile,320,1050,250,750);
-    XFile rexfile = await saveImageToXFile(croppedImage);
-
-    return rexfile;
-  }
 
 
 }

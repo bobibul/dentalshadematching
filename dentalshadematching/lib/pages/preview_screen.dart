@@ -10,8 +10,7 @@ class ImagePreview extends StatefulWidget {
 
 
   final XFile xFile;
-  final XFile xFile2;
-  const ImagePreview({super.key, required this.xFile, required this.xFile2});
+  const ImagePreview({super.key, required this.xFile});
 
   @override
   State<ImagePreview> createState() => _ImagePreviewState();
@@ -35,12 +34,6 @@ class _ImagePreviewState extends State<ImagePreview> {
               ),
             ),
             SizedBox(height: 30,),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: RepaintBoundary(
-                child: Image.file(File(widget.xFile2.path)),
-              ),
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

@@ -72,7 +72,14 @@ flutter:
      - assets/ev_-0.5/
      - assets/ev_-0.51/
      - assets/ev_-0.52/
+     - assets/classic_cropped_1/
+     - assets/classic_cropped_2/
+     - assets/classic_cropped_3/
+     - assets/classic_cropped_4/
+     - assets/classic_cropped_5/
+     - assets/classic_cropped_6/
      - assets/sample5m3/
+     - assets/classic_sample/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

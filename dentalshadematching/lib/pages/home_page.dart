@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../util/doctors.dart';
@@ -7,6 +8,27 @@ import '../util/helpers/text_helper.dart';
 import '../util/text.dart';
 import 'appointment.dart';
 import 'camera.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+
+Future<UserCredential> signInWithGoogle() async {
+  // Trigger the authentication flow
+  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+  // Obtain the auth details from the request
+  final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+  // Create a new credential
+  final credential = GoogleAuthProvider.credential(
+    accessToken: googleAuth?.accessToken,
+    idToken: googleAuth?.idToken,
+  );
+
+  // Once signed in, return the UserCredential
+  return await FirebaseAuth.instance.signInWithCredential(credential);
+}
+
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -44,10 +66,15 @@ class _HomePageState extends State<HomePage> {
                       text: "반가워요, 유진혁 님! 👋",
                     ),
                     const SizedBox(width: 70,),
-                    const CircleAvatar(
-                      minRadius: 20,
-                      maxRadius: 20,
-                      backgroundImage: AssetImage("assets/셀카.jpg"),
+                    InkWell(
+                      onTap: (){
+                        signInWithGoogle();
+                      },
+                      child: const CircleAvatar(
+                        minRadius: 20,
+                        maxRadius: 20,
+                        backgroundImage: AssetImage("assets/셀카.jpg"),
+                      ),
                     ),
                     const SizedBox(width:10),
                     const Icon(Icons.notifications,size: 40,color: Colors.white),

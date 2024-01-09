@@ -1,22 +1,23 @@
 
-import 'dart:io';
-
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:image/image.dart' as img;
 
-class ShowDesult extends StatefulWidget {
+class ShowResult extends StatefulWidget {
 
-  final String string;
-  final String keyname;
-  final XFile xfile2;
-  const ShowDesult({super.key,  required this.string, required this.keyname, required this.xfile2});
+  final String result; // a1,a2
+  final String keyname; // classic_cropped_1...
+  final img.Image adjustedGuideImage;
+  final img.Image adjustedTeethImage;
+  const ShowResult({super.key,  required this.result, required this.keyname,required this.adjustedGuideImage, required this.adjustedTeethImage});
 
 
   @override
-  State<ShowDesult> createState() => _ShowDesultState();
+  State<ShowResult> createState() => _ShowResultState();
 }
 
-class _ShowDesultState extends State<ShowDesult> {
+class _ShowResultState extends State<ShowResult> {
 
 
 
@@ -57,11 +58,23 @@ class _ShowDesultState extends State<ShowDesult> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircleAvatar(
-                      backgroundImage:
-                      AssetImage('assets/${widget.keyname}/${widget.string}.jpg'),
-                      radius: 50.0,
-                      backgroundColor: Colors.white),
+                  Column(
+                    children: [
+                      CircleAvatar(
+                          backgroundImage:
+                          AssetImage('assets/classic_sample/${widget.keyname}.jpg'),
+                          radius: 50.0,
+                          backgroundColor: Colors.white),
+                      Text("내장된 가이드"),
+                      const SizedBox(height: 30,),
+                      CircleAvatar(
+                          backgroundImage:
+                          AssetImage('assets/${widget.keyname}/${widget.result}.jpg'),
+                          radius: 50.0,
+                          backgroundColor: Colors.white),
+                      Text("내장된 치아 가이드"),
+                    ],
+                  ),
                   const SizedBox(width: 20,),
                   Container(
                     height: 100,
@@ -72,7 +85,7 @@ class _ShowDesultState extends State<ShowDesult> {
                     ),
                     child: Center(
                       child: Text(
-                        widget.string,
+                        widget.result,
                         textAlign: TextAlign.center,
 
                         style: TextStyle(color: Colors.amber[200],
@@ -83,14 +96,26 @@ class _ShowDesultState extends State<ShowDesult> {
                     ),
                   ),
                   const SizedBox(width: 20,),
-                  CircleAvatar(
-                      backgroundImage: FileImage(File(widget.xfile2.path)),
-                      radius: 50.0,
-                      backgroundColor: Colors.white
+                  Column(
+                    children: [
+                      CircleAvatar(
+                          backgroundImage: MemoryImage(Uint8List.fromList(img.encodePng(widget.adjustedGuideImage))),
+                          radius: 50.0,
+                          backgroundColor: Colors.white),
+
+                      Text("수정된 가이드"),
+                      const SizedBox(height: 30,),
+                      CircleAvatar(
+                          backgroundImage: MemoryImage(Uint8List.fromList(img.encodePng(widget.adjustedTeethImage))), // img.Image를 Uint8List로 변환하여 사용,
+                          radius: 50.0,
+                          backgroundColor: Colors.white
+                      ),
+                      Text("수정된 이빨"),
+                    ],
                   ),
                 ],
               ),
-              SizedBox(height: 100,),
+              SizedBox(height: 30,),
               Row(
                 children: [
                   Container(width: 150,height: 300,decoration: BoxDecoration(color: Colors.purple[300],borderRadius: BorderRadius.circular(20)),

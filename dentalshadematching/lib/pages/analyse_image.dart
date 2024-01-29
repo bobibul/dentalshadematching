@@ -7,10 +7,7 @@ import 'package:image/image.dart' as img;
 class ShowResult extends StatefulWidget {
 
   final String result; // a1,a2
-  final String keyname; // classic_cropped_1...
-  final img.Image adjustedGuideImage;
-  final img.Image adjustedTeethImage;
-  const ShowResult({super.key,  required this.result, required this.keyname,required this.adjustedGuideImage, required this.adjustedTeethImage});
+  const ShowResult({super.key,  required this.result});
 
 
   @override
@@ -58,23 +55,6 @@ class _ShowResultState extends State<ShowResult> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Column(
-                    children: [
-                      CircleAvatar(
-                          backgroundImage:
-                          AssetImage('assets/classic_sample/${widget.keyname}.jpg'),
-                          radius: 50.0,
-                          backgroundColor: Colors.white),
-                      Text("내장된 가이드"),
-                      const SizedBox(height: 30,),
-                      CircleAvatar(
-                          backgroundImage:
-                          AssetImage('assets/${widget.keyname}/${widget.result}.jpg'),
-                          radius: 50.0,
-                          backgroundColor: Colors.white),
-                      Text("내장된 치아 가이드"),
-                    ],
-                  ),
                   const SizedBox(width: 20,),
                   Container(
                     height: 100,
@@ -94,24 +74,6 @@ class _ShowResultState extends State<ShowResult> {
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 20,),
-                  Column(
-                    children: [
-                      CircleAvatar(
-                          backgroundImage: MemoryImage(Uint8List.fromList(img.encodePng(widget.adjustedGuideImage))),
-                          radius: 50.0,
-                          backgroundColor: Colors.white),
-
-                      Text("수정된 가이드"),
-                      const SizedBox(height: 30,),
-                      CircleAvatar(
-                          backgroundImage: MemoryImage(Uint8List.fromList(img.encodePng(widget.adjustedTeethImage))), // img.Image를 Uint8List로 변환하여 사용,
-                          radius: 50.0,
-                          backgroundColor: Colors.white
-                      ),
-                      Text("수정된 이빨"),
-                    ],
                   ),
                 ],
               ),

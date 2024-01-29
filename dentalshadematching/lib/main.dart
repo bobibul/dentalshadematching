@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:medical_app/pages/appointment.dart';
 import 'package:medical_app/pages/home.dart';
-import 'package:medical_app/pages/schedule.dart';
 
 import 'constants.dart';
 

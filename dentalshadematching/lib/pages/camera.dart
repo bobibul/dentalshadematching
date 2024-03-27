@@ -6,6 +6,8 @@ import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
 import 'preview_screen.dart';
 import 'package:image/image.dart' as img;
+import 'package:audioplayers/audioplayers.dart';
+
 
 int a = 0;
 
@@ -29,7 +31,13 @@ Future<XFile> saveImageToXFile(img.Image image) async {
 }
 
 class CameraApp extends StatefulWidget {
-  const CameraApp({super.key});
+  CameraApp({super.key});
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
+  Future<void> _playSound() async {
+    Source source = AssetSource('assets/camera_shutter_sound.mp3');
+    await _audioPlayer.play(source); // 카메라 촬영 소리 재생
+  }
 
 
   @override
@@ -40,14 +48,13 @@ class CameraApp extends StatefulWidget {
 class _CameraAppState extends State<CameraApp> {
 
   late CameraController controller;
-  int _currentCameraIndex = 0;
+  final _currentCameraIndex = 0;
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.amber[100],
         leadingWidth: 0.0,
         title: SizedBox(height: 30,),
       ),
@@ -62,61 +69,26 @@ class _CameraAppState extends State<CameraApp> {
                   Image.asset('assets/overlay_cc2.png'),
                   Column(
                     children: [
-                      SizedBox(height: 600,),
+                      const SizedBox(height: 600,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // FloatingActionButton(
-                          //   onPressed: _toggleCamera,
-                          //   backgroundColor: Colors.white,
-                          //   child: Icon(
-                          //     Icons.cameraswitch,
-                          //     size: 40,
-                          //     color: Colors.black,
-                          //   ),
-                          // ),
-                          FloatingActionButton(
-                            onPressed: () async{
-                              showDialog(context: context, builder: (context){
-                                return const Column(
-                                  children: [
-                                    SizedBox(height: 400,),
-                                    Center(child: CircularProgressIndicator()),
-                                    SizedBox(height: 100,),
-                                    Text(
-                                      '카메라를 고정한 상태로 기다려주세요',
-                                      style: TextStyle(
-                                          fontFamily: '진혁폰트',
-                                          fontSize: 20.0,
-                                          letterSpacing: 1.0,
-                                          fontWeight: FontWeight.normal,
-                                          color: Colors.red
-                                      ),
-                                    )
-                                  ],
-                                );
-                              }
-                              );
-                              XFile xfile = await getCroppedImage();
-                              Navigator.of(context).pop();
-                              if(!mounted) return;
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => ImagePreview(xFile: xfile,)));
-                            },
-                            backgroundColor: Colors.white,
-                            child: const Icon(
-                              Icons.camera,
-                              size: 40,
-                              color: Colors.black,
-                            ),
+                          InkWell(
+                            child: Container(decoration: BoxDecoration(shape: BoxShape.circle,color: Colors.white),height: 100,width: 100,),onTap:
+                              () async {
+                                XFile xfile = await getCroppedImage();
+                                Navigator.of(context).pop();
+                                if (!mounted) return;
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) =>
+                                        ImagePreview(xFile: xfile,)));
+                              })]
                           ),
                         ],
                       )
 
                     ],
-                  ),
-
-                ],
-              );
+                  );
             }else{
               return const Center(
                   child: CircularProgressIndicator()
@@ -137,7 +109,7 @@ class _CameraAppState extends State<CameraApp> {
     );
 
     await controller.initialize();
-    await controller.setExposureOffset(-0.5);
+    await controller.setFlashMode(FlashMode.off);
   }
 
   Future<XFile> onTakePicture() async{
@@ -163,17 +135,6 @@ class _CameraAppState extends State<CameraApp> {
     }
     return croppedImage;
   }
-
-  // void _toggleCamera(){
-  //   setState(() {
-  //     if(_currentCameraIndex == 0){
-  //       _currentCameraIndex = 1;
-  //     }
-  //     else{
-  //       _currentCameraIndex = 0;
-  //     }
-  //   });
-  // }
 
   Future<XFile> getCroppedImage() async{
     img.Image croppedImage;

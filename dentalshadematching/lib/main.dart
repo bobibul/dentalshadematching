@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:medical_app/pages/appointment.dart';
 import 'package:medical_app/pages/home.dart';
-import 'package:medical_app/pages/schedule.dart';
-
-import 'constants.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -24,7 +20,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData().copyWith(
-        primaryColor: Colors.purple[800]
+        primaryColor: Colors.purple[800],
+        appBarTheme: AppBarTheme(backgroundColor: Colors.purple[800]),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(backgroundColor: Colors.purple[800],)
       ),
       home:  Home(),
     );

@@ -22,7 +22,6 @@ class _ImagePreviewState extends State<ImagePreview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amber[200],
       body: Center(
         child: Column(
           children: [

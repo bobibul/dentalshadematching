@@ -4,19 +4,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
-class ShowDesult extends StatefulWidget {
+class ShowResult extends StatefulWidget {
 
   final String string;
-  final String keyname;
   final XFile xfile2;
-  const ShowDesult({super.key,  required this.string, required this.keyname, required this.xfile2});
+  const ShowResult({super.key,  required this.string, required this.xfile2});
 
 
   @override
-  State<ShowDesult> createState() => _ShowDesultState();
+  State<ShowResult> createState() => _ShowDesultState();
 }
 
-class _ShowDesultState extends State<ShowDesult> {
+class _ShowDesultState extends State<ShowResult> {
 
 
 
@@ -24,7 +23,7 @@ class _ShowDesultState extends State<ShowDesult> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amber[800],
+      backgroundColor: Colors.purple[300],
       body: Padding(
           padding: const EdgeInsets.fromLTRB(30.0, 70.0, 30.0, 0.0),
           child: Column(
@@ -97,11 +96,6 @@ class _ShowDesultState extends State<ShowDesult> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircleAvatar(
-                      backgroundImage:
-                      AssetImage('assets/${widget.keyname}/${widget.string}.jpg'),
-                      radius: 50.0,
-                      backgroundColor: Colors.white),
                   const SizedBox(width: 30,),
                   CircleAvatar(
                       backgroundImage: FileImage(File(widget.xfile2.path)),

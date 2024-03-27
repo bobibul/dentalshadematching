@@ -20,7 +20,7 @@ class _AppBottomNavigationState extends State<AppBottomNavigation> {
         currentIndex: widget.currentIndex,
         backgroundColor: colors['white-color'],
         elevation: 100,
-        selectedItemColor:Colors.black,
+        selectedItemColor:Colors.purple[800],
         selectedFontSize: 17,
         iconSize: 29,
         unselectedItemColor: Colors.grey[400],
@@ -29,7 +29,7 @@ class _AppBottomNavigationState extends State<AppBottomNavigation> {
             fontSize: 17
         ),
 
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: "Schedule"),
           BottomNavigationBarItem(icon: Icon(Icons.message), label: "Messages"),
